@@ -1,0 +1,210 @@
+format = """
+[┌───────────────────────────────────────────────────────────────────────────────────────>](bold green)
+[│](bold green)\
+$username\
+$hostname\
+$os\
+$directory\
+$localip\
+$time\
+$aws\
+$buf\
+$c\
+$conda\
+$dart\
+$docker_context\
+$elixir\
+$elm\
+$fossil_branch\
+$git_branch\
+$golang\
+$guix_shell\
+$haskell\
+$haxe\
+$hg_branch\
+$java\
+$julia\
+$lua\
+$memory_usage\
+$meson\
+$nim\
+$nix_shell\
+$nodejs\
+$package\
+$pijul_channel\
+$python\
+$rlang\
+$ruby\
+$rust\
+$scala\
+$spack
+[└─> ](bold green)"""
+#$character
+
+[username]
+show_always = true
+format = '[$user](bold green)'
+disabled = false
+
+[hostname]
+ssh_only = false
+ssh_symbol = " "
+format = '[@$hostname](bold green) '
+trim_at = ''
+disabled = false
+
+[os]
+format = "on [$symbol](bold red)[($name )]($style)[$version ]($style)"
+style = "bold blue"
+disabled = false
+
+[directory]
+read_only = " "
+home_symbol="~"
+format = "[$path](bold green) "
+truncation_length = 0
+truncation_symbol = "~/"
+
+[time]
+disabled = false
+time_format = "%A %Z %R" # Hour:Minute Format
+format = '[ ♥ $time ]($style)'
+
+[localip]
+ssh_only = false
+format = "[IP:$localipv4](bold red) "
+disabled = false
+
+[aws]
+symbol = "  "
+
+[buf]
+symbol = " "
+
+[c]
+symbol = " "
+
+[conda]
+symbol = " "
+
+[dart]
+symbol = " "
+
+[docker_context]
+symbol = " "
+
+[elixir]
+symbol = " "
+
+[elm]
+symbol = " "
+
+[fossil_branch]
+symbol = " "
+
+[git_branch]
+symbol = " "
+
+[golang]
+symbol = " "
+
+[guix_shell]
+symbol = " "
+
+[haskell]
+symbol = " "
+
+[haxe]
+symbol = "⌘ "
+
+[hg_branch]
+symbol = " "
+
+[java]
+symbol = " "
+
+[julia]
+symbol = " "
+
+[lua]
+symbol = " "
+
+[memory_usage]
+symbol = "󰍛 "
+
+[meson]
+symbol = "󰔷 "
+
+[nim]
+symbol = "󰆥 "
+
+[nix_shell]
+symbol = " "
+
+[nodejs]
+symbol = " "
+
+[os.symbols]
+Alpaquita = " "
+Alpine = " "
+Amazon = " "
+Android = " "
+Arch = " "
+Artix = " "
+CentOS = " "
+Debian = " "
+DragonFly = " "
+Emscripten = " "
+EndeavourOS = " "
+Fedora = " "
+FreeBSD = " "
+Garuda = "󰛓 "
+Gentoo = " "
+HardenedBSD = "󰞌 "
+Illumos = "󰈸 "
+Linux = " "
+Mabox = " "
+Macos = " "
+Manjaro = " "
+Mariner = " "
+MidnightBSD = " "
+Mint = " "
+NetBSD = " "
+NixOS = " "
+OpenBSD = "󰈺 "
+openSUSE = " "
+OracleLinux = "󰌷 "
+Pop = " "
+Raspbian = " "
+Redhat = " "
+RedHatEnterprise = " "
+Redox = " "
+Solus = "󰠳 "
+SUSE = " "
+Ubuntu = " "
+Unknown = " "
+Windows = "󰍲 "
+
+[package]
+symbol = "󰏗 "
+
+[pijul_channel]
+symbol = ""
+
+[python]
+symbol = " "
+
+[rlang]
+symbol = "ﳒ "
+
+[ruby]
+symbol = " "
+
+[rust]
+symbol = " "
+
+[scala]
+symbol = " "
+
+[spack]
+symbol = "󰰢 "
