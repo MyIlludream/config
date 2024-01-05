@@ -1,11 +1,12 @@
+# [╭────────────────────────────────────────────────────────────────────────────────────────󰁔](bold green)
+# [│](bold green)\
 format = """
-[┌───────────────────────────────────────────────────────────────────────────────────────>](bold green)
-[│](bold green)\
+[╭](bold green)\
 $username\
 $hostname\
 $os\
 $directory\
-$localip\
+
 $time\
 $aws\
 $buf\
@@ -38,8 +39,10 @@ $ruby\
 $rust\
 $scala\
 $spack
-[└─> ](bold green)"""
+[╰─󰁔 ](bold green)"""
 #$character
+# $localip\
+
 
 [username]
 show_always = true
@@ -62,12 +65,14 @@ disabled = false
 read_only = " "
 home_symbol="~"
 format = "[$path](bold green) "
-truncation_length = 0
+truncation_length = 8
 truncation_symbol = "~/"
+use_os_path_sep = true
+disabled = false
 
 [time]
 disabled = false
-time_format = "%A %Z %R" # Hour:Minute Format
+time_format = "%A %R" # Hour:Minute Format  %Z 时区
 format = '[ ♥ $time ]($style)'
 
 [localip]
