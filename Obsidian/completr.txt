@@ -1,3 +1,4 @@
+\frac{{\bcancel{}}^{}}{{\bcancel{}}^{}}
 {\bcancel{#}}^{#}
 \above{#}{#}
 \verb|#|
