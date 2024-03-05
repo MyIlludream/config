@@ -1,4 +1,4 @@
-{\bcancel{#}}^#
+{\bcancel{#}}^{#}
 \above{#}{#}
 \verb|#|
 \left\\
