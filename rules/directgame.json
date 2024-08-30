@@ -5,8 +5,8 @@
          "api.steampowered.com"
       ],
       "domain_regex": [
-         "\.cm.steampowered.com$",
-         "\.steamserver.net$"
+         "\\.cm.steampowered.com$",
+         "\\.steamserver.net$"
       ],
       "geosite": [
          "category-games@cn",
