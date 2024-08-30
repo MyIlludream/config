@@ -1,0 +1,1076 @@
+#https://github.com/MetaCubeX/Clash.Meta/blob/Meta/docs/config.yaml
+
+port: 20181 # HTTP(S) 代理服务器端口
+socks-port: 20182 # SOCKS5 代理端口
+mixed-port: 20180 # HTTP(S) 和 SOCKS 代理混合端口
+
+
+allow-lan: true # 允许局域网连接
+bind-address: "*" # 绑定 IP 地址，仅作用于 allow-lan 为 true，'*'表示所有地址
+
+find-process-mode: strict
+
+mode: rule
+
+#自定义 geodata url
+geox-url:
+  geoip: "https://cdn.jsdelivr.net/gh/Loyalsoldier/v2ray-rules-dat@release/geoip.dat"
+  geosite: "https://cdn.jsdelivr.net/gh/Loyalsoldier/v2ray-rules-dat@release/geosite.dat"
+  mmdb: "https://cdn.jsdelivr.net/gh/Loyalsoldier/geoip@release/Country.mmdb"
+geo-auto-update: true # 是否自动更新 geodata
+geo-update-interval: 24 # 更新间隔，单位：小时
+
+log-level: debug # 日志等级 silent/error/warning/info/debug
+
+ipv6: true # 开启 IPv6 总开关，关闭阻断所有 IPv6 链接和屏蔽 DNS 请求 AAAA 记录
+
+
+
+external-controller: 0.0.0.0:2018 # RESTful API 监听地址
+#external-controller-tls: 0.0.0.0:20185 # RESTful API HTTPS 监听地址，需要配置 tls 部分配置文件
+secret: "doghome" # `Authorization:Bearer ${secret}`
+
+# tcp-concurrent: true # TCP 并发连接所有 IP, 将使用最快握手的 TCP
+external-ui: /etc/ShellCrash/ui # 配置 WEB UI 目录，使用 http://{{external-controller}}/ui 访问
+external-ui-name: metacubexd
+external-ui-url: "https://github.com/MetaCubeX/metacubexd/archive/refs/heads/gh-pages.zip"
+# interface-name: bond0 # 设置出口网卡
+
+# 全局 TLS 指纹，优先低于 proxy 内的 client-fingerprint
+# 可选： "chrome","firefox","safari","ios","random","none" options.
+# Utls is currently support TLS transport in TCP/grpc/WS/HTTP for VLESS/Vmess and trojan.
+global-client-fingerprint: safari
+
+# routing-mark:6666 # 配置 fwmark 仅用于 Linux
+experimental:
+
+# 类似于 /etc/hosts, 仅支持配置单个 IP
+hosts:
+u2.dmhy.org: [104.25.62.106, 45.114.11.238]
+avistaz.to: 172.67.74.208 
+www.torrentleech.org: 104.20.76.38
+# www.okx.com: [104.18.43.174, 172.64.144.82]
+# '*.clash.dev': 127.0.0.1
+# '.dev': 127.0.0.1
+# 'alpha.clash.dev': '::1'
+# test.com: [1.1.1.1, 2.2.2.2]
+# clash.lan: clash # clash 为特别字段，将加入本地所有网卡的地址
+# baidu.com: google.com # 只允许配置一个别名
+
+profile: # 存储 select 选择记录
+  store-selected: true
+
+  # 持久化 fake-ip
+  store-fake-ip: true
+
+# Tun 配置
+tun:
+  enable: false
+  stack: system # gvisor / lwip
+  device: Mihomo
+  dns-hijack:
+    - 0.0.0.0:53 # 需要劫持的 DNS
+  auto-detect-interface: true # 自动识别出口网卡
+  auto-route: true # 配置路由表
+#   # mtu: 9000 # 最大传输单元
+#   # strict-route: true # 将所有连接路由到tun来防止泄漏，但你的设备将无法其他设备被访问
+  inet4-route-address: # 启用 auto_route 时使用自定义路由而不是默认路由
+    - 0.0.0.0/1
+    - 128.0.0.0/1
+  inet6-route-address: # 启用 auto_route 时使用自定义路由而不是默认路由
+    - "::/1"
+    - "8000::/1"
+  # endpoint-independent-nat: false # 启用独立于端点的 NAT
+  # include-uid: # UID 规则仅在 Linux 下被支持，并且需要 auto_route
+  # - 0
+  # include-uid-range: # 限制被路由的的用户范围
+  # - 1000-99999
+  # exclude-uid: # 排除路由的的用户
+  #- 1000
+  # exclude-uid-range: # 排除路由的的用户范围
+  # - 1000-99999
+
+  # Android 用户和应用规则仅在 Android 下被支持
+  # 并且需要 auto-route
+
+  # include-android-user: # 限制被路由的 Android 用户
+  # - 0
+  # - 10
+  # include-package: # 限制被路由的 Android 应用包名
+  # - com.android.chrome
+  # exclude-package: # 排除被路由的 Android 应用包名
+  # - com.android.captiveportallogin
+
+
+#ebpf配置
+#ebpf:
+#   # auto-redir: # redirect 模式，仅支持 TCP
+#   #   - eth0
+#  redirect-to-tun: # UDP+TCP 使用该功能请勿启用 auto-route
+#    - clash0
+
+# 嗅探域名 可选配置
+sniffer:
+  enable: true
+  ## 对 redir-host 类型识别的流量进行强制嗅探
+  ## 如：Tun、Redir 和 TProxy 并 DNS 为 redir-host 皆属于
+  # force-dns-mapping: false
+  ## 对所有未获取到域名的流量进行强制嗅探
+  # parse-pure-ip: false
+  # 是否使用嗅探结果作为实际访问，默认 true
+  # 全局配置，优先级低于 sniffer.sniff 实际配置
+  override-destination: true
+  sniff: # TLS 默认如果不配置 ports 默认嗅探 443
+    TLS:
+      ports: [443, 8443]
+
+    # 默认嗅探 80
+    HTTP: # 需要嗅探的端口
+      ports: [80, 8080-8880]
+      # 可覆盖 sniffer.override-destination
+      override-destination: true
+  force-domain:
+    - +.v2ex.com
+  ## 对嗅探结果进行跳过
+  # skip-domain:
+  #   - Mijia Cloud
+  # 需要嗅探协议
+  # 已废弃，若 sniffer.sniff 配置则此项无效
+  # sniffing:
+  #   - tls
+  #   - http
+  # 强制对此域名进行嗅探
+
+  # 仅对白名单中的端口进行嗅探，默认为 443，80
+  # 已废弃，若 sniffer.sniff 配置则此项无效
+  # port-whitelist:
+  #   - "80"
+  #   - "443"
+  #   # - 8000-9999
+
+# # tunnels: # one line config
+# #   - tcp/udp,127.0.0.1:6553,114.114.114.114:53,proxy
+# #   - tcp,127.0.0.1:6666,rds.mysql.com:3306,vpn
+# #   # full yaml config
+# #   - network: [tcp, udp]
+# #     address: 127.0.0.1:7777
+# #     target: target.com
+# #     proxy: Proxy
+
+# DNS配置
+dns:
+  enable: false # 关闭将使用系统 DNS
+  use-hosts: true # 查询 hosts
+  prefer-h3: true # 开启 DoH 支持 HTTP/3，将并发尝试
+  listen: 0.0.0.0:1053 # 开启 DNS 服务器监听
+  ipv6: true # false 将返回 AAAA 的空结果
+  # ipv6-timeout: 300 # 单位：ms，内部双栈并发时，向上游查询 AAAA 时，等待 AAAA 的时间，默认 100ms
+  # 用于解析 nameserver，fallback 以及其他DNS服务器配置的，DNS 服务域名
+  # 只能使用纯 IP 地址，可使用加密 DNS
+  #default-nameserver:
+  #   - 8.8.8.8
+  #  - 1.1.1.1
+  #   - 119.29.29.29
+  #   - 10.0.0.1
+  #   - "[2400:3200::1]:53"
+#    - tls://223.5.5.5:853
+
+  # DNS主要域名配置
+  # 支持 UDP，TCP，DoT，DoH，DoQ
+  # 这部分为主要 DNS 配置，影响所有直连，确保使用对大陆解析精准的 DNS
+  nameserver:
+    - https://dns.alidns.com/dns-query
+    # - '[2001:da8::666]'
+    # - 'https://dns.cloudflare.com/dns-query#h3=true'
+    #- "[2606:4700:4700::1111]:53"
+    # - https://doh.pub/dns-query
+    # - https://dns.alidns.com/dns-query
+    #- https://mozilla.cloudflare-dns.com/dns-query#DNS&h3=true # 指定策略组和使用 HTTP/3
+    #- dhcp://en0 # dns from dhcp
+    #- quic://dns.adguard.com:784 # DNS over QUIC
+    # - '8.8.8.8#en0' # 兼容指定DNS出口网卡
+
+  # 当配置 fallback 时，会查询 nameserver 中返回的 IP 是否为 CN，非必要配置
+  # 当不是 CN，则使用 fallback 中的 DNS 查询结果
+  # 确保配置 fallback 时能够正常查询
+  fallback:
+    - 'tcp://1.1.1.1#Proxy' # 指定 DNS 过代理查询，ProxyGroupName 为策略组名或节点名，过代理配置优先于配置出口网卡，当找不到策略组或节点名则设置为出口网卡
+    - '[2620:fe::fe]#Proxy'
+  # 专用于节点域名解析的 DNS 服务器，非必要配置项
+  # 配置服务器若查询失败将使用 nameserver，非并发查询
+  
+  #proxy-server-nameserver:
+    #- https://dns.google/dns-query
+  # - tls://one.one.one.one
+
+  # 配置 fallback 使用条件
+  fallback-filter:    #回落DNS服务器过滤
+    geoip: true       #为真时，不匹配为geoip规则的使用fallback返回结果
+    geoip-code: CN    #geoip匹配区域设定
+    geosite:
+      #【Meta专属】设定geosite某分类使用fallback返回结果
+      - gfw
+    domain:
+      #列表中的域名使用fallback返回解析结果
+      - '+.google.com'
+      - '+.facebook.com'
+      - '+.youtube.com'
+    ipcidr:
+      - 0.0.0.0/8
+      - 10.0.0.0/8
+      - 100.64.0.0/10
+      - 127.0.0.0/8
+      - 169.254.0.0/16
+      - 172.16.0.0/12
+      - 240.0.0.0/4
+  # 配置查询域名使用的 DNS 服务器
+  nameserver-policy:
+    #   'www.baidu.com': '114.114.114.114'
+    #   '+.internal.crop.com': '10.0.0.1'
+
+    # "geosite:cn,private,apple":
+    #   - https://doh.pub/dns-query
+    #   - https://dns.alidns.com/dns-query
+    # "geosite:category-ads-all": rcode://success
+    # "www.baidu.com,+.google.cn": [223.5.5.5, https://dns.alidns.com/dns-query]
+
+    ## global，dns 为 rule-providers 中的名为 global 和 dns 规则订阅，
+    ## 且 behavior 必须为 domain/classical，当为 classical 时仅会生效域名类规则
+    # "rule-set:global,dns": 8.8.8.8
+
+#    - system # append DNS server from system configuration. If not found, it would print an error log and skip.
+
+
+  enhanced-mode: fake-ip #fake-ip # or redir-host
+  fake-ip-range: 198.18.0.1/16 # fake-ip 池设置
+
+  # 配置不使用fake-ip的域名，直接访问真实的dns请求
+
+  fake-ip-filter:
+    #- '*.github.com'
+    #- 'github.com'
+    #- '+.*'这个是所有域名都走真实dns，而不是fake-ip
+    # 以下域名列表参考自 vernesong/OpenClash 项目，并由 Hackl0us 整理补充
+    # === LAN ===
+    - '*.lan'
+    # === Linksys Wireless Router ===
+    - '*.linksys.com'
+    - '*.linksyssmartwifi.com'
+    # === Apple Software Update Service ===
+    - 'swscan.apple.com'
+    - 'mesu.apple.com'
+    # === Windows 10 Connnect Detection ===
+    - '*.msftconnecttest.com'
+    - '*.msftncsi.com'
+    # === NTP Service ===
+    - 'time.*.com'
+    - 'time.*.gov'
+    - 'time.*.edu.cn'
+    - 'time.*.apple.com'
+
+    - 'time1.*.com'
+    - 'time2.*.com'
+    - 'time3.*.com'
+    - 'time4.*.com'
+    - 'time5.*.com'
+    - 'time6.*.com'
+    - 'time7.*.com'
+
+    - 'ntp.*.com'
+    - 'ntp.*.com'
+    - 'ntp1.*.com'
+    - 'ntp2.*.com'
+    - 'ntp3.*.com'
+    - 'ntp4.*.com'
+    - 'ntp5.*.com'
+    - 'ntp6.*.com'
+    - 'ntp7.*.com'
+
+    - '*.time.edu.cn'
+    - '*.ntp.org.cn'
+    - '+.pool.ntp.org'
+
+    - 'time1.cloud.tencent.com'
+    # === Music Service ===
+    ## NetEase
+    - '+.music.163.com'
+    - '*.126.net'
+    ## Baidu
+    - 'musicapi.taihe.com'
+    - 'music.taihe.com'
+    ## Kugou
+    - 'songsearch.kugou.com'
+    - 'trackercdn.kugou.com'
+    ## Kuwo
+    - '*.kuwo.cn'
+    ## JOOX
+    - 'api-jooxtt.sanook.com'
+    - 'api.joox.com'
+    - 'joox.com'
+    ## QQ
+    - '+.y.qq.com'
+    - '+.music.tc.qq.com'
+    - 'aqqmusic.tc.qq.com'
+    - '+.stream.qqmusic.qq.com'
+    ## Xiami
+    - '*.xiami.com'
+    ## Migu
+    - '+.music.migu.cn'
+    # === Game Service ===
+    ## Nintendo Switch
+    - '+.srv.nintendo.net'
+    ## Sony PlayStation
+    - '+.stun.playstation.net'
+    ## Microsoft Xbox
+    - 'xbox.*.microsoft.com'
+    - '+.xboxlive.com'
+    # === Other ===
+    ## QQ Quick Login
+    - 'localhost.ptlogin2.qq.com'
+    ## Golang
+    - 'proxy.golang.org'
+    ## STUN Server
+    - 'stun.*.*'
+    - 'stun.*.*.*'
+ #   - '*.weixin.qq.com'
+
+bypass:
+  # - "localhost"
+  # - 127.*
+  # - 10.*
+  - 172.16.*
+  - 172.17.*
+  - 172.18.*
+  - 172.19.*
+  - 172.20.*
+  - 172.21.*
+  - 172.22.*
+  - 172.23.*
+  - 172.24.*
+  - 172.25.*
+  - 172.26.*
+  - 172.27.*
+  - 172.28.*
+  - 172.29.*
+  - 172.30.*
+  - 172.31.*
+  - 192.168.*
+  - <local>
+# Clash 格式的节点或支持 *ray 的分享格式
+
+# proxy-providers:
+#   iplc:
+#     type: http # http 的 path 可空置,默认储存路径为 homedir的proxies文件夹,文件名为url的md5
+#     url: "https://jmssub.net/members/getsub.php?service=757655&id=463c5432-e57f-402a-8448-deaad1b6ba35"
+#     interval: 3600
+#     path: ./iplc.yaml # 默认只允许存储在 clash 的 Home Dir，如果想存储到任意位置，添加环境变量 SKIP_SAFE_PATH_CHECK=1
+#     health-check:
+#       enable: true
+#       interval: 600
+#       # lazy: true
+#       url: "http://www.gstatic.com/generate_204"
+
+
+
+
+proxies: # socks5
+ 
+  - name: "iplc-sea"
+    type: vless
+    server: 210.74.226.215
+    port: 29997
+    uuid: Ilovegame
+    network: h2 #grpc
+    h2-opts:
+      host:
+        - swdist.apple.com
+      path: /    
+    tls: true
+    udp: true
+    flow: ''
+    servername: swdist.apple.com # REALITY servername
+    client-fingerprint: safari # cannot be empty
+    reality-opts:
+      public-key: amygp9q-RUc-SDwpHivgB3yMzcNdcti30_8soGkstik
+      short-id: abba01
+ 
+
+  # - name: "hysteria-fra"
+  #   type: hysteria
+  #   server: fra.dnonb.com
+  #   port: 52100
+  #   # ports: 1000,2000-3000,5000 # port 不可省略,
+  #   #auth_str: yourpassword # 将会在未来某个时候删除
+  #   # auth-str: yourpassword
+  #   obfs: dGVkZHlzdW4uY29tCg==
+  #   # alpn:
+  #   #   - h3
+  #   protocol: udp # 支持 udp/wechat-video/faketcp
+  #   up: "50 Mbps" # 若不写单位，默认为 Mbps
+  #   down: "200 Mbps" # 若不写单位，默认为 Mbps
+  #   # sni: server.com
+  #   # skip-cert-verify: false
+  #   # recv_window_conn: 12582912 # 将会在未来某个时候删除
+  #   # recv-window-conn: 12582912
+  #   # recv_window: 52428800 # 将会在未来某个时候删除
+  #   # recv-window: 52428800
+  #   # ca: "./my.ca"
+  #   # ca_str: "xyz" # 将会在未来某个时候删除
+  #   # ca-str: "xyz"
+  #   # disable_mtu_discovery: false
+  #   # fingerprint: xxxx
+  #   # fast-open: true # 支持 TCP 快速打开，默认为 false
+
+  # - name: "vless-hk"
+  #   type: vless
+  #   server: gamehk.dnonb.com
+  #   port: 443
+  #   uuid: c2100c9b-5db2-4dd6-a3fd-c608b2667b52
+  #   udp: true
+  #   tls: true
+  #   network: ws
+  #   servername: # AKA SNI
+  #   ws-opts:
+  #     path: "/71d3c7aeb6?ed=2048"
+  #   # flow: xtls-rprx-direct # xtls-rprx-origin  # enable XTLS
+  #   # skip-cert-verify: true
+  #   # fingerprint: xxxx
+  #   # client-fingerprint: random # Available: "chrome","firefox","safari","random","none"
+
+
+
+
+proxy-groups:
+  # 代理链，目前relay可以支持udp的只有vmess/vless/trojan/ss/ssr/tuic
+  # wireguard目前不支持在relay中使用，请使用proxy中的dialer-proxy配置项
+  # Traffic: clash <-> http <-> vmess <-> ss1 <-> ss2 <-> Internet
+
+  # load-balance 将按照算法随机选择节点
+  # strategy: consistent-hashing # 可选 round-robin 和 sticky-sessions
+  - name: ✈️ 节点选择
+    type: select
+    url: "http://www.gstatic.com/generate_204"
+    interval: 300
+    proxies:
+      - iplc-sea
+
+
+  - name: "原生"
+    type: select
+    url: "http://www.gstatic.com/generate_204"
+    interval: 300
+    proxies:
+      - iplc-sea
+
+  - name: Proxy
+    type: select
+    url: "http://www.gstatic.com/generate_204"
+    interval: 300
+    proxies:
+      - ✈️ 节点选择
+
+  # - name: iplc-us
+  #   type: select
+  #   url: "http://www.gstatic.com/generate_204"
+  #   interval: 300
+  #   use:
+  #     - iplc
+  #   filter: "美(?i)|us|US|American|unite state|美国"
+
+  # - name: iplc-hk
+  #   type: select
+  #   url: "http://www.gstatic.com/generate_204"
+  #   interval: 300
+  #   use:
+  #     - iplc
+  #   filter: "(?i)港|hk|HK|hongkong|hong kong"
+
+
+  - name: ♻️ 负载均衡
+    type: load-balance
+    url: "http://www.gstatic.com/generate_204"
+    interval: 300
+    tolerance: 50
+    lazy: true
+    strategy: consistent-hashing
+    proxies:
+      - iplc-sea
+
+  - name: 🔯 故障转移
+    type: fallback
+    url: "http://www.gstatic.com/generate_204"
+    interval: 300
+    tolerance: 50
+    proxies:
+      - iplc-sea
+
+  - name: 📲 电报消息
+    type: select
+    proxies:
+      - ✈️ 节点选择
+      - ♻️ 负载均衡
+      - 🔯 故障转移
+ 
+
+  - name: 📹 油管视频
+    type: select
+    proxies:
+      - ✈️ 节点选择
+      - 🇸🇬 狮城节点
+      - 🇭🇰 香港节点
+      - 🇨🇳 台湾节点
+      - 🇯🇵 日本节点
+      - 🇺🇲 美国节点
+      - 🇰🇷 韩国节点
+
+  - name: 💻 奈飞视频
+    type: select
+    proxies:
+      - ✈️ 节点选择
+      - 💿 奈飞节点
+      - 🇸🇬 狮城节点
+      - 🇭🇰 香港节点
+      - 🇨🇳 台湾节点
+      - 🇯🇵 日本节点
+      - 🇺🇲 美国节点
+      - 🇰🇷 韩国节点
+
+  - name: 🌍 国外媒体
+    type: select
+    proxies:
+      - ✈️ 节点选择
+      - 🇸🇬 狮城节点
+      - 🇭🇰 香港节点
+      - 🇨🇳 台湾节点
+      - 🇯🇵 日本节点
+      - 🇺🇲 美国节点
+      - 🇰🇷 韩国节点
+
+  - name: 🌏 国内媒体
+    type: select
+    proxies:
+      - 🎯 全球直连
+      - 🇭🇰 香港节点
+      - 🇨🇳 台湾节点
+
+  - name: 📺 哔哩哔哩
+    type: select
+    proxies:
+      - 🎯 全球直连
+      - 🇭🇰 香港节点
+      - 🇨🇳 台湾节点
+
+  - name: 🎮 游戏平台
+    type: select
+    proxies:
+      - 🎯 全球直连
+      - 🎲 游戏节点
+
+  - name: Ⓜ️ 微软云盘
+    type: select
+    proxies:
+      - ✈️ 节点选择
+      - 🇺🇲 美国节点
+      - 🎯 全球直连
+
+
+  - name: ⌨️ 微软服务
+    type: select
+    proxies:
+      - ✈️ 节点选择
+      - Proxy
+      - 🇺🇲 美国节点
+      - 🎯 全球直连
+
+
+  - name: 🎵 网易音乐
+    type: select
+    proxies:
+      - 🎯 全球直连
+      - 🎵 音乐节点 
+
+  - name: 🔍️ 谷歌服务
+    type: select
+    proxies:
+      - ✈️ 节点选择
+      - Proxy
+      - 🇺🇲 美国节点
+      - 🎯 全球直连
+
+  - name: 🐟 漏网之鱼
+    type: select
+    proxies:
+      - Proxy
+      - 🎯 全球直连
+      - ✈️ 节点选择
+      - ♻️ 负载均衡
+
+
+  - name: 💿 奈飞节点
+    type: select
+    proxies:
+      - 原生
+      
+  - name: 🎲 游戏节点
+    type: select
+    proxies:
+      - ✈️ 节点选择
+
+  - name: 🎵 音乐节点 
+    type: fallback
+    url: "http://www.gstatic.com/generate_204"
+    interval: 600
+    proxies:
+      - 原生
+
+  
+
+  - name: 🇭🇰 香港节点
+    type: select
+    url: "http://www.gstatic.com/generate_204"
+    interval: 600
+    proxies:
+      - 原生
+    filter: "(?i)港|hk|HK|hongkong|hong kong"
+  
+  - name: 🇯🇵 日本节点
+    type: select
+    url: "http://www.gstatic.com/generate_204"
+    interval: 600   
+    proxies:
+      - 原生
+    filter: "日(?i)|jp|JP|Japan|日本"
+  
+  - name: 🇺🇲 美国节点
+    type: select
+    url: "http://www.gstatic.com/generate_204"
+    interval: 600
+    proxies:
+      - iplc-sea
+      - 原生
+    filter: "美(?i)|us|US|American|unite state|美国"
+
+
+  - name: 🇨🇳 台湾节点
+    type: select
+    url: "http://www.gstatic.com/generate_204"
+    interval: 600   
+    proxies:
+      - 原生
+    filter: "TW|tw|台湾"
+
+
+  - name: 🇸🇬 狮城节点
+    type: select
+    url: "http://www.gstatic.com/generate_204"
+    interval: 600   
+    proxies:
+      - 原生
+    filter: "SG|sg|Singapore|新加坡"
+
+  - name: 🇰🇷 韩国节点
+    type: select
+    url: "http://www.gstatic.com/generate_204"
+    interval: 600   
+    proxies:
+      - 原生
+    filter: "KR|kr|Korean|韩国"
+  
+  - name: 🎯 全球直连
+    type: select
+    proxies:
+      - DIRECT
+      - REJECT
+  - name: 🛑 隐私拦截
+    type: select
+    proxies:
+      - REJECT
+      - DIRECT
+  
+  # - name: UseProvider
+  #   type: select
+  #   filter: "HK|TW" # 正则表达式，过滤 provider1 中节点名包含 HK 或 TW
+  #   use:
+  #     - provider1
+  #   proxies:
+  #     - Proxy
+  #     - DIRECT
+
+#这个一定要在，上面规则集下面，要不然有些软件不识别，如果是客户端记得在设置-Clash字段-勾上rule-sub
+
+rule-providers:
+  China:
+    type: http
+    behavior: classical
+    path: ./RuleSet/China.yaml
+    url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/China/China.yaml
+    interval: 86400
+  AdvertisingTest:
+    type: http
+    behavior: classical
+    path: ./RuleSet/AdvertisingTest.yaml
+    url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/AdvertisingTest/AdvertisingTest.yaml
+    interval: 86400
+  Hijacking:
+    type: http
+    behavior: classical
+    path: ./RuleSet/Hijacking.yaml
+    url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Hijacking/Hijacking.yaml
+    interval: 86400
+  Privacy:
+    type: http
+    behavior: classical
+    path: ./RuleSet/Privacy.yaml
+    url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Privacy/Privacy_Classical.yaml
+    interval: 86400
+  Google:
+    type: http
+    behavior: classical
+    path: ./RuleSet/Google.yaml
+    url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Google/Google.yaml
+    interval: 86400
+  GoogleDrive:
+    type: http
+    behavior: classical
+    path: ./RuleSet/GoogleDrive.yaml
+    url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/GoogleDrive/GoogleDrive.yaml
+    interval: 86400
+  OneDrive:
+    type: http
+    behavior: classical
+    path: ./RuleSet/OneDrive.yaml
+    url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/OneDrive/OneDrive.yaml
+    interval: 86400
+  Microsoft:
+    type: http
+    behavior: classical
+    path: ./RuleSet/Microsoft.yaml
+    url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Microsoft/Microsoft.yaml
+    interval: 86400
+  Github:
+    type: http
+    behavior: classical
+    path: ./RuleSet/Github.yaml
+    url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/GitHub/GitHub.yaml
+    interval: 86400
+  Telegram:
+    type: http
+    behavior: classical
+    path: ./RuleSet/Telegram.yaml
+    url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Telegram/Telegram.yaml
+    interval: 86400
+  Game:
+    type: http
+    behavior: classical
+    path: ./RuleSet/Game.yaml
+    url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Game/Game.yaml
+    interval: 86400
+  YouTube:
+    type: http
+    behavior: classical
+    path: ./RuleSet/YouTube.yaml
+    url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/YouTube/YouTube.yaml
+    interval: 86400
+  Netflix:
+    type: http
+    behavior: classical
+    path: ./RuleSet/Netflix.yaml
+    url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Netflix/Netflix.yaml
+    interval: 86400
+  Bahamut:
+    type: http
+    behavior: classical
+    path: ./RuleSet/Bahamut.yaml
+    url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Bahamut/Bahamut.yaml
+    interval: 86400
+  GlobalMedia:
+    type: http
+    behavior: classical
+    path: ./RuleSet/GlobalMedia.yaml
+    url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/GlobalMedia/GlobalMedia.yaml
+    interval: 86400
+  Bilibili:
+    type: http
+    behavior: classical
+    path: ./RuleSet/Bilibili.yaml
+    url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/BiliBili/BiliBili.yaml
+    interval: 86400
+  NetEaseMusic:
+    type: http
+    behavior: classical
+    path: ./RuleSet/NetEaseMusic.yaml
+    url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/NetEaseMusic/NetEaseMusic.yaml
+    interval: 86400
+  ChinaMedia:
+    type: http
+    behavior: classical
+    path: ./RuleSet/ChinaMedia.yaml
+    url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/ChinaMedia/ChinaMedia.yaml
+    interval: 86400
+  Developer:
+    type: http
+    behavior: classical
+    path: ./RuleSet/Developer.yaml
+    url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Developer/Developer.yaml
+    interval: 86400
+  Proxy:
+    type: http
+    behavior: classical
+    path: ./RuleSet/Proxy.yaml
+    url: https://raw.githubusercontent.com/hope140/Clash/beta/Proxy.yaml
+    interval: 86400
+  Download:
+    type: http
+    behavior: classical
+    path: ./RuleSet/Download.yaml
+    url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Download/Download.yaml
+    interval: 86400
+  Lan:
+    type: http
+    behavior: classical
+    path: ./RuleSet/Lan.yaml
+    url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Lan/Lan.yaml
+    interval: 86400
+  Direct:
+    type: http
+    behavior: classical
+    path: ./RuleSet/Direct.yaml
+    url: https://raw.githubusercontent.com/hope140/Clash/beta/Direct.yaml
+#     interval: 86400
+
+
+sub-rules:
+  PT:
+    - DOMAIN-KEYWORD,pterclub.com,DIRECT
+    - DOMAIN-KEYWORD,hdhome.org,DIRECT
+    - DOMAIN-KEYWORD,springsunday.net,DIRECT
+    - DOMAIN-KEYWORD,hdsky.me,DIRECT
+    - DOMAIN-KEYWORD,m-team.io,DIRECT
+    - DOMAIN-KEYWORD,ourbits.club,DIRECT
+    - DOMAIN-KEYWORD,keepfrds.com,DIRECT
+    - DOMAIN-KEYWORD,ptchdbits.co,DIRECT    
+    - DOMAIN-KEYWORD,chdbits.xyz,DIRECT
+    - DOMAIN-KEYWORD,dmhy.org,DIRECT
+    - DOMAIN-KEYWORD,hdchina.org,DIRECT
+    - DOMAIN-KEYWORD,hd4fans.org,DIRECT
+    - DOMAIN-KEYWORD,totheglory.im,DIRECT
+
+    - DOMAIN-KEYWORD,audiences.me,DIRECT
+    - DOMAIN-KEYWORD,lemonhd.org,DIRECT
+    - DOMAIN-KEYWORD,btschool.club,DIRECT
+    - DOMAIN-KEYWORD,hdatmos.club,DIRECT
+    - DOMAIN-KEYWORD,gainbound.net,DIRECT
+    - DOMAIN-KEYWORD,discfan.net,DIRECT
+    - DOMAIN-KEYWORD,soulvoice.club,DIRECT
+    - DOMAIN-KEYWORD,hdarea.club,DIRECT
+    - DOMAIN-KEYWORD,ptchina.org,DIRECT
+    - DOMAIN-KEYWORD,pttime.org,DIRECT
+    - DOMAIN-KEYWORD,hdfans.org,DIRECT
+    - DOMAIN-KEYWORD,greatposterwall.com,DIRECT
+    - DOMAIN-KEYWORD,oshen.win,DIRECT
+    - DOMAIN-KEYWORD,hd.ai,DIRECT
+    - DOMAIN-KEYWORD,piggo.me,DIRECT
+    - DOMAIN-KEYWORD,0ff.cc,DIRECT
+    - DOMAIN-KEYWORD,et8.org,DIRECT
+    - DOMAIN-KEYWORD,ultrahd.net,DIRECT
+    - DOMAIN-KEYWORD,azusa.wiki,DIRECT
+    - DOMAIN-KEYWORD,hdchina.org,DIRECT
+    - DOMAIN-KEYWORD,monikadesign.uk,DIRECT
+
+    - DOMAIN-KEYWORD,open.cd,DIRECT
+    - DOMAIN-KEYWORD,jpopsuki.eu,DIRECT
+    - DOMAIN-KEYWORD,orpheus.network,DIRECT
+    - DOMAIN-KEYWORD,opsfet.ch,DIRECT
+    - DOMAIN-KEYWORD,dicmusic.club,DIRECT
+    - DOMAIN-KEYWORD,sugoimusic.me,DIRECT
+    - DOMAIN-KEYWORD,lztr.me,DIRECT
+
+    - DOMAIN-KEYWORD,hudbt.hust.edu.cn,DIRECT
+    - DOMAIN-KEYWORD,tjupt.org,DIRECT
+
+    - DOMAIN-KEYWORD,filelist.io,DIRECT
+    - DOMAIN-KEYWORD,avistaz.to,DIRECT
+    - DOMAIN-KEYWORD,nicept.net,DIRECT
+    - DOMAIN-KEYWORD,torrentleech.org,DIRECT
+    - DOMAIN-KEYWORD,thegeeks.click,DIRECT
+    - DOMAIN-KEYWORD,happyfappy.org,DIRECT
+    - DOMAIN-KEYWORD,morethantv.me,DIRECT
+    - DOMAIN-KEYWORD,milkie.cc,DIRECT
+    - DOMAIN-KEYWORD,gazellegames.net,DIRECT
+    - DOMAIN-KEYWORD,animetorrents.me,DIRECT
+
+    - DOMAIN-KEYWORD,mbot.vip,DIRECT
+    - DOMAIN-KEYWORD,plex.tv,DIRECT
+    - DOMAIN-KEYWORD,githubusercontent.com,Proxy
+    - DOMAIN-KEYWORD,github.com,Proxy
+    - DOMAIN-KEYWORD,docker.com,Proxy
+    - DOMAIN-KEYWORD,digitaloceanspaces.com,Proxy
+    - DOMAIN-KEYWORD,fedorapeople.org,Proxy
+    - DOMAIN-KEYWORD,debian.org,Proxy
+    - DOMAIN-KEYWORD,kernel.org,Proxy
+    - DOMAIN-KEYWORD,google,Proxy
+  
+  services:
+    - DOMAIN-KEYWORD,mb3admin,Proxy
+    - DOMAIN-KEYWORD,fanart,Proxy
+    - DOMAIN-KEYWORD,themoviedb,Proxy
+    - DOMAIN-KEYWORD,thetvdb,Proxy
+  sites:
+    - DOMAIN-KEYWORD,wiki,Proxy
+    - DOMAIN-KEYWORD,idc,Proxy
+    - DOMAIN-KEYWORD,v2ex,Proxy
+    - DOMAIN-KEYWORD,reddit,Proxy
+    - DOMAIN-KEYWORD,nnr,Proxy
+    - DOMAIN-KEYWORD,moe,Proxy
+  games:
+    # lost ark
+    - PROCESS-NAME,Launch_Game.exe,Proxy
+    - PROCESS-NAME,avp.exe,Proxy
+    - PROCESS-NAME,LOSTARK.exe,Proxy
+    - PROCESS-NAME,EasyAntiCheat_Setup.exe,Proxy
+    - PROCESS-NAME,GameBar.exe,Proxy
+    - PROCESS-NAME,dllhost.exe,Proxy
+    # Riot Games
+    - PROCESS-NAME,LeagueClient.exe,Proxy
+    - PROCESS-NAME,League of Legends.exe,Proxy
+    - PROCESS-NAME,LeagueClientUxRender.exe,Proxy
+    - PROCESS-NAME,LeagueCrashHandler64.exe,Proxy
+    - PROCESS-NAME,Riot Client.exe,Proxy
+    - PROCESS-NAME,RiotClientCrashHandler.exe,Proxy
+    - PROCESS-NAME,RiotClientServices.exe,Proxy
+    - PROCESS-NAME,vgc.exe,Proxy
+    - PROCESS-NAME,vgtray.exe,Proxy
+
+    # 暴雪
+    - PROCESS-NAME,BlizzardError.exe,Proxy
+    - PROCESS-NAME,Agent.exe,Proxy
+    - PROCESS-NAME,D2R.exe,Proxy
+    - PROCESS-NAME,Diablo II Resurrected Launcher.exe,Proxy
+    - PROCESS-NAME,BlizzardError.exe,Proxy
+    - PROCESS-NAME,Battle.net Launcher.exe,Proxy
+    - PROCESS-NAME,Battle.net.exe,Proxy
+    - PROCESS-NAME,BlizzardBrowser.exe,Proxy
+    - PROCESS-NAME,BlizzardError.exe,Proxy
+    - PROCESS-NAME,FenrisError.exe,Proxy
+    - PROCESS-NAME,Diablo IV Launcher.exe,Proxy
+    - PROCESS-NAME,Diablo IV.exe,Proxy
+    
+    # darkanddarker
+    - PROCESS-NAME,Chaf Games.exe,Proxy
+
+    # OverPrime
+    - PROCESS-NAME,CrashReportClient.exe,Proxy
+    - PROCESS-NAME,UnrealCEFSubProcess.exe,Proxy
+    - PROCESS-NAME,UE4PrereqSetup_x64.exe,Proxy
+    - PROCESS-NAME,ParagonClient-Win64-Shipping.exe,Proxy
+    - PROCESS-NAME,ParagonClient.exe,Proxy
+    - PROCESS-NAME,thunderbird.exe,Proxy
+
+
+rules:
+  - DST-PORT,6202/5888/65535/65534/51400-51420,DIRECT
+  - SRC-PORT,6202/5888/65535/65534/51400-51420,DIRECT
+  - SUB-RULE,(OR,((NETWORK,TCP),(NETWORK,UDP))),PT
+  - SUB-RULE,(OR,((NETWORK,TCP),(NETWORK,UDP))),services
+  - SUB-RULE,(OR,((NETWORK,TCP),(NETWORK,UDP))),sites
+  - SUB-RULE,(OR,((NETWORK,TCP),(NETWORK,UDP))),games
+
+  - RULE-SET,Download,🎯 全球直连
+  - RULE-SET,Lan,🎯 全球直连
+  - RULE-SET,AdvertisingTest,🛑 隐私拦截
+  - RULE-SET,Hijacking,🛑 隐私拦截
+  - RULE-SET,Privacy,🛑 隐私拦截
+  - RULE-SET,Google,🔍️ 谷歌服务
+  - RULE-SET,GoogleDrive,🔍️ 谷歌服务
+  - RULE-SET,OneDrive,Ⓜ️ 微软云盘
+  - RULE-SET,Microsoft,⌨️ 微软服务
+  - RULE-SET,Github,⌨️ 微软服务
+  - RULE-SET,Telegram,📲 电报消息
+  - RULE-SET,Game,🎮 游戏平台
+  - RULE-SET,YouTube,📹 油管视频
+  - RULE-SET,Netflix,💻 奈飞视频
+  - RULE-SET,Bahamut,🌍 国外媒体
+  - RULE-SET,GlobalMedia,🌍 国外媒体
+  - RULE-SET,Bilibili,📺 哔哩哔哩
+  - RULE-SET,NetEaseMusic,🎵 网易音乐
+  - RULE-SET,ChinaMedia,🌏 国内媒体
+  - RULE-SET,Developer,✈️ 节点选择
+  - RULE-SET,Proxy,✈️ 节点选择
+  - RULE-SET,China,🎯 全球直连
+  - RULE-SET,Direct,🎯 全球直连
+  - GEOIP,CN,DIRECT
+
+  - GEOSITE,cn,DIRECT
+  - GEOSITE,category-ads-all,REJECT
+  - GEOSITE,icloud@cn,DIRECT
+  - GEOSITE,apple@cn,DIRECT
+  - GEOSITE,apple-cn,DIRECT
+  - GEOSITE,microsoft@cn,DIRECT
+  - GEOSITE,facebook,Proxy
+  - GEOSITE,youtube,Proxy 
+  - GEOSITE,google,Proxy
+  - GEOSITE,geolocation-cn,DIRECT
+  - GEOSITE,geolocation-!cn,Proxy
+  
+  #GEOIP规则  
+  - GEOIP,telegram,Proxy,no-resolve
+  - GEOIP,private,DIRECT,no-resolve
+  - GEOIP,cn,DIRECT
+  - GEOIP,google,Proxy
+  - GEOIP,private,DIRECT
+
+  - MATCH,🐟 漏网之鱼
+
+
+
+# 流量入站
+# listeners:
+#   - name: socks5
+#     type: socks
+#     port: 10808
+#     #listen: 0.0.0.0 # 默认监听 0.0.0.0
+#     # rule: sub-rule-name1 # 默认使用 rules，如果未找到 sub-rule 则直接使用 rules
+#     # proxy: proxy # 如果不为空则直接将该入站流量交由指定proxy处理
+#     # udp: false # 默认 true
+
+#   - name: http
+#     type: http
+#     port: 10809
+#     listen: 0.0.0.0
+#     # rule: sub-rule-name1 # 默认使用 rules，如果未找到 sub-rule 则直接使用 rules
+#     # proxy: proxy # 如果不为空则直接将该入站流量交由指定proxy处理(当proxy不为空时，这里的proxy名称必须合法，否则会出错)
+
+#   - name: mixed
+#     type: mixed #  HTTP(S) 和 SOCKS 代理混合
+#     port: 10810
+#     listen: 0.0.0.0
+#     # rule: sub-rule-name1 # 默认使用 rules，如果未找到 sub-rule 则直接使用 rules
+#     # proxy: proxy # 如果不为空则直接将该入站流量交由指定proxy处理(当proxy不为空时，这里的proxy名称必须合法，否则会出错)
+#     # udp: false # 默认 true
+
+#   - name: reidr
+#     type: redir
+#     port: 10811
+#     listen: 0.0.0.0
+#     # rule: sub-rule-name1 # 默认使用 rules，如果未找到 sub-rule 则直接使用 rules
+#     # proxy: proxy # 如果不为空则直接将该入站流量交由指定proxy处理(当proxy不为空时，这里的proxy名称必须合法，否则会出错)
+
+#  - name: tuic
+#    type: tuic
+#    port: 10815
+#    listen: 0.0.0.0
+    # rule: sub-rule-name1 # 默认使用 rules，如果未找到 sub-rule 则直接使用 rules
+    # proxy: proxy # 如果不为空则直接将该入站流量交由指定proxy处理(当proxy不为空时，这里的proxy名称必须合法，否则会出错)
+    # token:    # tuicV4填写（可以同时填写users）
+    #   - TOKEN
+    # users:    # tuicV5填写（可以同时填写token）
+    #   00000000-0000-0000-0000-000000000000: PASSWORD_0
+    #   00000000-0000-0000-0000-000000000001: PASSWORD_1
+    #  certificate: ./server.crt
+    #  private-key: ./server.key
+    #  congestion-controller: bbr
+    #  max-idle-time: 15000
+    #  authentication-timeout: 1000
+    #  alpn:
+    #    - h3
+    #  max-udp-relay-packet-size: 1500
