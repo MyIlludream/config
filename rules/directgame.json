@@ -1,0 +1,16 @@
+{
+  "rules": [
+    {
+      "domain_suffix": [
+         "api.steampowered.com"
+      ],
+      "domain_regex": [
+         "\.cm.steampowered.com$",
+         "\.steamserver.net$"
+      ],
+      "geosite": [
+         "category-games@cn",
+      ]
+    }
+  ]
+}
