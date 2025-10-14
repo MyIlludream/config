@@ -41,7 +41,7 @@ $rust\
 $scala\
 $spack
 [󰁔 ](bold green)"""
-[╰─󰁔 ]
+#[╰─󰁔 ]
 #$character
 # $localip\
 
