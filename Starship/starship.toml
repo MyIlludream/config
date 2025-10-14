@@ -1,7 +1,8 @@
 # [╭────────────────────────────────────────────────────────────────────────────────────────󰁔](bold green)
 # [│](bold green)\
+# [╭](bold green)\
 format = """
-[╭](bold green)\
+
 $username\
 $hostname\
 $os\
@@ -39,7 +40,8 @@ $ruby\
 $rust\
 $scala\
 $spack
-[╰─󰁔 ](bold green)"""
+[󰁔 ](bold green)"""
+[╰─󰁔 ]
 #$character
 # $localip\
 
