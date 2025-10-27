@@ -48,13 +48,13 @@ $spack
 
 [username]
 show_always = true
-format = '[$user](bold green)'
+format = '[$user](bold red)'
 disabled = false
 
 [hostname]
 ssh_only = false
 ssh_symbol = " "
-format = '[@$hostname](bold green) '
+format = '[@](bold green)[$hostname](bold blue) '
 trim_at = ''
 disabled = false
 
