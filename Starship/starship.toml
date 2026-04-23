@@ -59,7 +59,7 @@ trim_at = ''
 disabled = false
 
 [os]
-format = "on [$symbol](bold red)[($name )]($style)[$version ]($style)"
+format = "on [$symbol](bold red) [($name )]($style)[$version ]($style)"
 style = "bold blue"
 disabled = false
 
