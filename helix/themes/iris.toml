@@ -1,0 +1,138 @@
+# Iris Theme for Helix
+# Sanitized version: No invalid values, Hyphenated variables, Quoted keys.
+
+# --- Syntax Highlighting ---
+"attribute" = "purple"
+"comment" = { fg = "fg-comment", modifiers = ["italic"] }
+"comment.block.documentation" = { fg = "fg-comment-soft" }
+"comment.line.documentation" = { fg = "fg-comment-soft" }
+"constant" = "red"
+"constant.builtin" = { fg = "yellow", modifiers = ["italic"] }
+"constant.character" = "green"
+"constant.character.escape" = "accent-2"
+"constructor" = "yellow"
+"function" = "blue-dark"
+"function.builtin" = "purple"
+"function.macro" = "blue-dark"
+"function.special" = "accent-2"
+"keyword" = "red"
+"keyword.control" = "red"
+"keyword.control.import" = "yellow"
+"keyword.control.return" = { fg = "red", modifiers = ["italic"] }
+"keyword.directive" = "orange"
+"keyword.function" = "red"
+"keyword.operator" = "red"
+"label" = "blue"
+"namespace" = "yellow"
+"operator" = "accent-2"
+"punctuation" = "blue-bright"
+"punctuation.bracket" = "blue-dark"
+"special" = "accent-2"
+"string" = "green"
+"string.regexp" = "cyan"
+"string.special" = "orange"
+"tag" = "red"
+"type" = "yellow"
+"type.builtin" = "accent-2"
+"type.enum.variant" = "magenta"
+"variable" = "fg"
+"variable.builtin" = "accent-2"
+"variable.other.member" = "red"
+"variable.parameter" = { fg = "fg", modifiers = ["italic"] }
+
+# --- Markup ---
+"markup.bold" = { modifiers = ["bold"] }
+"markup.heading" = { fg = "accent-2", modifiers = ["bold"] }
+"markup.italic" = { modifiers = ["italic"] }
+"markup.link" = { fg = "blue", underline = { style = "line" } }
+"markup.link.label" = "cyan"
+"markup.link.text" = "cyan"
+"markup.link.url" = { underline = { style = "line" } }
+"markup.list" = { fg = "accent-2", modifiers = ["bold"] }
+"markup.raw" = "green"
+"markup.strikethrough" = { modifiers = ["crossed_out"] }
+
+# --- Diff / Git ---
+"diff.delta" = "diff-change"
+"diff.minus" = "diff-delete"
+"diff.plus" = "diff-add"
+
+# --- UI Elements ---
+"ui.background" = { bg = "bg", fg = "fg" }
+"ui.cursor" = { modifiers = ["reversed"] }
+"ui.cursor.match" = { fg = "yellow", modifiers = ["bold"] }
+"ui.cursorline.primary" = { bg = "bg-highlight" }
+"ui.help" = { bg = "bg-menu", fg = "fg" }
+"ui.linenr" = { fg = "fg-gutter" }
+"ui.linenr.selected" = { fg = "accent", modifiers = ["bold"] }
+"ui.menu" = { bg = "bg-menu", fg = "fg" }
+"ui.menu.selected" = { bg = "bg-highlight", fg = "accent" }
+"ui.popup" = { bg = "bg-menu", fg = "border" }
+"ui.selection" = { bg = "selection" }
+"ui.selection.primary" = { bg = "selection" }
+"ui.statusline" = { bg = "bg-menu", fg = "fg-dark" }
+"ui.statusline.inactive" = { bg = "bg-menu", fg = "fg-gutter" }
+"ui.statusline.normal" = { bg = "blue-dark", fg = "black", modifiers = ["bold"] }
+"ui.statusline.insert" = { bg = "accent", fg = "black", modifiers = ["bold"] }
+"ui.statusline.select" = { bg = "magenta", fg = "black", modifiers = ["bold"] }
+"ui.text" = "fg"
+"ui.text.focus" = { fg = "accent", modifiers = ["bold"] }
+"ui.text.inactive" = { fg = "fg-dark", modifiers = ["italic"] }
+"ui.text.info" = { bg = "bg-menu", fg = "info" }
+"ui.text.directory" = "blue-bright"
+"ui.virtual.ruler" = { bg = "bg-highlight" }
+"ui.virtual.whitespace" = "fg-gutter"
+"ui.virtual.indent-guide" = "fg-gutter"
+"ui.virtual.inlay-hint" = { bg = "bg-inlay", fg = "hint", modifiers = ["italic"] }
+"ui.virtual.jump-label" = { fg = "orange", modifiers = ["bold"] }
+"ui.window" = { fg = "border", modifiers = ["bold"] }
+
+# --- Diagnostics ---
+"diagnostic.error" = { underline = { style = "curl", color = "red-bright" } }
+"diagnostic.warning" = { underline = { style = "curl", color = "yellow" } }
+"diagnostic.info" = { underline = { style = "curl", color = "info" } }
+"diagnostic.hint" = { underline = { style = "curl", color = "hint" } }
+"diagnostic.unnecessary" = { modifiers = ["dim"] }
+"diagnostic.deprecated" = { modifiers = ["crossed_out"] }
+
+"error" = "red-bright"
+"warning" = "yellow"
+"info" = "info"
+"hint" = "hint"
+
+# --- Palette Definition (Must be last) ---
+[palette]
+bg = "#212121"
+bg-dark = "#1a1a1a"
+bg-menu = "#1a1a1a"
+bg-highlight = "#2b2b2b"
+bg-inlay = "#3c3c3c"
+fg = "#ecffff"
+fg-dark = "#8d8d8d"
+fg-gutter = "#424242"
+fg-comment = "#3e9cc7"
+fg-comment-soft = "#4ba7d0"
+border = "#444444"
+accent = "#82cd64"
+accent-2 = "#89ddff"
+red = "#f07178"
+red-bright = "#ff6969"
+orange = "#f78c6c"
+yellow = "#ffcb6b"
+yellow-bright = "#ffd700"
+green = "#90cc89"
+green-bright = "#c3e88d"
+cyan = "#80cbc4"
+blue = "#179fff"
+blue-bright = "#78dcf3"
+blue-dark = "#6b9aff"
+purple = "#b9adff"
+magenta = "#da70d6"
+black = "#1d1f21"
+white = "#ffffff"
+info = "#78d9ff"
+hint = "#80cbc4"
+diff-add = "#9bb955"
+diff-delete = "#f07178"
+diff-change = "#89ddff"
+selection = "#616161"
